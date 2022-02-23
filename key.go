@@ -8,7 +8,6 @@ import (
 	"fmt"
 	"math/big"
 
-	"github.com/h0n9/petit-chat/code"
 	lc "github.com/libp2p/go-libp2p-core/crypto"
 )
 
@@ -103,10 +102,10 @@ func (privKey PrivKey) PubKey() *PubKey {
 
 func (pubKey *PubKey) Check() error {
 	if len(pubKey) != PubKeySize {
-		return code.ImproperPubKey
+		return fmt.Errorf("improper pubkey spec: size")
 	}
 	if pubKey[0] != PubKeyPrefix {
-		return code.ImproperPubKey
+		return fmt.Errorf("improper pubkey spec: prefix")
 	}
 	return nil
 }

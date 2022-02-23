@@ -5,7 +5,6 @@ go 1.17
 require (
 	github.com/btcsuite/btcutil v1.0.2
 	github.com/ethereum/go-ethereum v1.10.16
-	github.com/h0n9/petit-chat v0.0.0-20220214220801-12cfce861230
 	github.com/libp2p/go-libp2p-core v0.14.0
 	github.com/multiformats/go-multiaddr v0.5.0
 	github.com/stretchr/testify v1.7.0
