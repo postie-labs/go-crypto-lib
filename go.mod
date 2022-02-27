@@ -1,4 +1,4 @@
-module github.com/postie-labs/go-crypto-lib
+module github.com/postie-labs/go-postie-lib
 
 go 1.17
 
