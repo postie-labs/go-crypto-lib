@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"crypto/ecdsa"
 	"crypto/rand"
+	"crypto/sha256"
 	"encoding/hex"
 	"fmt"
 	"math/big"
@@ -11,16 +12,23 @@ import (
 	lc "github.com/libp2p/go-libp2p-core/crypto"
 )
 
-func GenPrivKey() (*PrivKey, error) {
+func genPrivKey(secret []byte) (*PrivKey, error) {
 	privKey := PrivKey{}
+	copy(privKey[:], secret)
+	return &privKey, nil
+}
 
+func GenPrivKey() (*PrivKey, error) {
 	p256, err := ecdsa.GenerateKey(c, rand.Reader)
 	if err != nil {
 		return nil, err
 	}
+	return genPrivKey(p256.D.Bytes())
+}
 
-	copy(privKey[:], p256.D.Bytes())
-	return &privKey, nil
+func GenPrivKeyFromSeed(seed []byte) (*PrivKey, error) {
+	seedHash := sha256.Sum256(seed)
+	return genPrivKey(seedHash[:])
 }
 
 func (privKey PrivKey) Bytes() []byte {
