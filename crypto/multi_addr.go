@@ -28,6 +28,10 @@ func (addrs *Addrs) Set(value string) error {
 	return nil
 }
 
+func (addrs *Addrs) Type() string {
+	return "Addrs"
+}
+
 func (addrs *Addrs) ToMultiAddr() []maddr.Multiaddr {
 	return []maddr.Multiaddr(*addrs)
 }
