@@ -108,6 +108,16 @@ func (privKey PrivKey) PubKey() *PubKey {
 	return &pubKey
 }
 
+func GenPubKeyFromBytes(pubKeyBytes []byte) (*PubKey, error) {
+	pubKey := PubKey{}
+	copy(pubKey[:], pubKeyBytes)
+	err := pubKey.Check()
+	if err != nil {
+		return nil, err
+	}
+	return &pubKey, nil
+}
+
 func (pubKey *PubKey) Check() error {
 	if len(pubKey) != PubKeySize {
 		return fmt.Errorf("improper pubkey spec: size")
