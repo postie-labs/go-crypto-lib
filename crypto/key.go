@@ -41,26 +41,26 @@ func GenPrivKeyFromBytes(privKeyBytes []byte) (*PrivKey, error) {
 	return &privKey, nil
 }
 
-func (privKey PrivKey) Check() error {
+func (privKey *PrivKey) Check() error {
 	if len(privKey) != PrivKeySize {
 		return fmt.Errorf("improper privkey spec: size")
 	}
 	return nil
 }
 
-func (privKey PrivKey) Bytes() []byte {
+func (privKey *PrivKey) Bytes() []byte {
 	return privKey[:]
 }
 
-func (privKey PrivKey) Equals(target PrivKey) bool {
+func (privKey *PrivKey) Equals(target PrivKey) bool {
 	return bytes.Equal(privKey.Bytes(), target.Bytes())
 }
 
-func (privKey PrivKey) String() string {
+func (privKey *PrivKey) String() string {
 	return hex.EncodeToString(privKey[:])
 }
 
-func (privKey PrivKey) MarshalJSON() ([]byte, error) {
+func (privKey *PrivKey) MarshalJSON() ([]byte, error) {
 	data := make([]byte, PrivKeySize*2+2)
 	data[0] = '"'
 	data[len(data)-1] = '"'
@@ -83,7 +83,7 @@ func (privKey *PrivKey) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-func (privKey PrivKey) ToECDSA() *ecdsa.PrivateKey {
+func (privKey *PrivKey) ToECDSA() *ecdsa.PrivateKey {
 	X, Y := c.ScalarBaseMult(privKey[:])
 	return &ecdsa.PrivateKey{
 		D: new(big.Int).SetBytes(privKey[:]),
@@ -95,7 +95,7 @@ func (privKey PrivKey) ToECDSA() *ecdsa.PrivateKey {
 	}
 }
 
-func (privKey PrivKey) ToECDSAP2P() (lc.PrivKey, error) {
+func (privKey *PrivKey) ToECDSAP2P() (lc.PrivKey, error) {
 	pk, _, err := lc.ECDSAKeyPairFromKey(privKey.ToECDSA())
 	if err != nil {
 		return nil, err
@@ -112,7 +112,7 @@ func (privKey PrivKey) FromECDSA(*ecdsa.PrivateKey) {
 
 // PubKey related functions
 
-func (privKey PrivKey) PubKey() *PubKey {
+func (privKey *PrivKey) PubKey() *PubKey {
 	pubKey := PubKey{PubKeyPrefix}
 
 	priv := privKey.ToECDSA()
@@ -157,11 +157,11 @@ func (pubKey *PubKey) ToECDSA() *ecdsa.PublicKey {
 	}
 }
 
-func (pubKey PubKey) Equals(target PubKey) bool {
+func (pubKey *PubKey) Equals(target PubKey) bool {
 	return bytes.Equal(pubKey.Bytes(), target.Bytes())
 }
 
-func (pubKey PubKey) String() string {
+func (pubKey *PubKey) String() string {
 	return hex.EncodeToString(pubKey[:])
 }
 
@@ -186,10 +186,10 @@ func (pubKey *PubKey) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-func (pubKey PubKey) X() *big.Int {
+func (pubKey *PubKey) X() *big.Int {
 	return pubKey.ToECDSA().X
 }
 
-func (pubKey PubKey) Y() *big.Int {
+func (pubKey *PubKey) Y() *big.Int {
 	return pubKey.ToECDSA().Y
 }
