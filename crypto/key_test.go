@@ -19,6 +19,19 @@ func TestPrivKeyMarshal(t *testing.T) {
 
 	assert.EqualValues(t, *privKey, newPrivKey)
 }
+
+func TestPrivKeyBytes(t *testing.T) {
+	privKey, err := GenPrivKey()
+	assert.Nil(t, err)
+
+	privKeyBytes := privKey.Bytes()
+
+	newPrivKey, err := GenPrivKeyFromBytes(privKeyBytes)
+	assert.NoError(t, err)
+
+	assert.EqualValues(t, privKey, newPrivKey)
+}
+
 func TestPubKeyMarshal(t *testing.T) {
 	privKey, err := GenPrivKey()
 	assert.Nil(t, err)
@@ -33,4 +46,18 @@ func TestPubKeyMarshal(t *testing.T) {
 	assert.Nil(t, err)
 
 	assert.EqualValues(t, *pubKey, newPubKey)
+}
+
+func TestPubKeyBytes(t *testing.T) {
+	privKey, err := GenPrivKey()
+	assert.Nil(t, err)
+
+	pubKey := privKey.PubKey()
+
+	pubKeyBytes := pubKey.Bytes()
+
+	newPubKey, err := GenPubKeyFromBytes(pubKeyBytes)
+	assert.NoError(t, err)
+
+	assert.EqualValues(t, pubKey, newPubKey)
 }

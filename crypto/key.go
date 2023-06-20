@@ -31,6 +31,23 @@ func GenPrivKeyFromSeed(seed []byte) (*PrivKey, error) {
 	return genPrivKey(seedHash[:])
 }
 
+func GenPrivKeyFromBytes(privKeyBytes []byte) (*PrivKey, error) {
+	privKey := PrivKey{}
+	copy(privKey[:], privKeyBytes)
+	err := privKey.Check()
+	if err != nil {
+		return nil, err
+	}
+	return &privKey, nil
+}
+
+func (privKey PrivKey) Check() error {
+	if len(privKey) != PrivKeySize {
+		return fmt.Errorf("improper privkey spec: size")
+	}
+	return nil
+}
+
 func (privKey PrivKey) Bytes() []byte {
 	return privKey[:]
 }
