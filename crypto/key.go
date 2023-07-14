@@ -9,7 +9,7 @@ import (
 	"fmt"
 	"math/big"
 
-	lc "github.com/libp2p/go-libp2p-core/crypto"
+	lc "github.com/libp2p/go-libp2p/core/crypto"
 )
 
 func genPrivKey(secret []byte) (*PrivKey, error) {
