@@ -9,7 +9,7 @@ import (
 
 var preAddr = []byte{'t', 'c', 'k'}
 
-func (pubKey PubKey) Address() Addr {
+func (pubKey *PubKey) Address() Addr {
 	tmp := make([]byte, AddrSize)
 	pubKeyByte := elliptic.Marshal(c, pubKey.X(), pubKey.Y())
 	hash := h.Sum256(pubKeyByte)

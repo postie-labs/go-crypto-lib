@@ -6,7 +6,7 @@ import (
 	"github.com/ethereum/go-ethereum/crypto/ecies"
 )
 
-func (pubKey PubKey) Encrypt(msg []byte) ([]byte, error) {
+func (pubKey *PubKey) Encrypt(msg []byte) ([]byte, error) {
 	pubKeyECDSA := pubKey.ToECDSA()
 	pubKeyECIES := ecies.ImportECDSAPublic(pubKeyECDSA)
 
@@ -18,7 +18,7 @@ func (pubKey PubKey) Encrypt(msg []byte) ([]byte, error) {
 	return ct, nil
 }
 
-func (privKey PrivKey) Decrypt(cipher []byte) ([]byte, error) {
+func (privKey *PrivKey) Decrypt(cipher []byte) ([]byte, error) {
 	privKeyECDSA := privKey.ToECDSA()
 	privKeyECIES := ecies.ImportECDSA(privKeyECDSA)
 
