@@ -28,7 +28,15 @@ const (
 )
 
 type (
-	PrivKey [PrivKeySize]byte
-	PubKey  [PubKeySize]byte
-	Addr    string
+	// PrivKey [PrivKeySize]byte
+	// PubKey  [PubKeySize]byte
+	Addr string
 )
+
+type PrivKey struct {
+	data [PrivKeySize]byte
+}
+
+type PubKey struct {
+	data [PubKeySize]byte
+}
