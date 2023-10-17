@@ -113,7 +113,7 @@ func (privKey PrivKey) FromECDSA(*ecdsa.PrivateKey) {
 // PubKey related functions
 
 func (privKey *PrivKey) PubKey() *PubKey {
-	pubKey := PubKey{b: [PubKeySize]byte{}}
+	pubKey := PubKey{b: [PubKeySize]byte{PubKeyPrefix}}
 
 	priv := privKey.ToECDSA()
 	X := priv.X.Bytes()
