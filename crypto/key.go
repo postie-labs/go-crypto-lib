@@ -105,7 +105,7 @@ func (privKey *PrivKey) ToECDSAP2P() (lc.PrivKey, error) {
 }
 
 /*
-func (privKey PrivKey) FromECDSA(*ecdsa.PrivateKey) {
+func (privKey *PrivKey) FromECDSA(*ecdsa.PrivateKey) {
 	copy(privKey[:], *ecdsa.PrivateKey.D.Bytes())
 }
 */

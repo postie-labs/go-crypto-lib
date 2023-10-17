@@ -7,7 +7,7 @@ import (
 	"math/big"
 )
 
-func (privKey PrivKey) Sign(msg []byte) ([]byte, error) {
+func (privKey *PrivKey) Sign(msg []byte) ([]byte, error) {
 	hash := h.Sum256(msg)
 
 	priv := privKey.ToECDSA()
@@ -26,7 +26,7 @@ func (privKey PrivKey) Sign(msg []byte) ([]byte, error) {
 	return sig, nil
 }
 
-func (pubKey PubKey) Verify(msg []byte, sig []byte) bool {
+func (pubKey *PubKey) Verify(msg []byte, sig []byte) bool {
 	if len(sig) != SigSize {
 		return false
 	}
