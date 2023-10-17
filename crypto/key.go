@@ -14,7 +14,7 @@ import (
 
 func genPrivKey(secret []byte) (*PrivKey, error) {
 	privKey := PrivKey{}
-	copy(privKey.data[:], secret)
+	copy(privKey.b[:], secret)
 	return &privKey, nil
 }
 
@@ -33,7 +33,7 @@ func GenPrivKeyFromSeed(seed []byte) (*PrivKey, error) {
 
 func GenPrivKeyFromBytes(privKeyBytes []byte) (*PrivKey, error) {
 	privKey := PrivKey{}
-	copy(privKey.data[:], privKeyBytes)
+	copy(privKey.b[:], privKeyBytes)
 	err := privKey.Check()
 	if err != nil {
 		return nil, err
@@ -42,14 +42,14 @@ func GenPrivKeyFromBytes(privKeyBytes []byte) (*PrivKey, error) {
 }
 
 func (privKey *PrivKey) Check() error {
-	if len(privKey.data) != PrivKeySize {
+	if len(privKey.b) != PrivKeySize {
 		return fmt.Errorf("improper privkey spec: size")
 	}
 	return nil
 }
 
 func (privKey *PrivKey) Bytes() []byte {
-	return privKey.data[:]
+	return privKey.b[:]
 }
 
 func (privKey *PrivKey) Equals(target PrivKey) bool {
@@ -57,7 +57,7 @@ func (privKey *PrivKey) Equals(target PrivKey) bool {
 }
 
 func (privKey *PrivKey) String() string {
-	return hex.EncodeToString(privKey.data[:])
+	return hex.EncodeToString(privKey.b[:])
 }
 
 func (privKey *PrivKey) MarshalJSON() ([]byte, error) {
@@ -75,7 +75,7 @@ func (privKey *PrivKey) UnmarshalJSON(data []byte) error {
 		)
 	}
 
-	_, err := hex.Decode(privKey.data[:], data[1:len(data)-1])
+	_, err := hex.Decode(privKey.b[:], data[1:len(data)-1])
 	if err != nil {
 		return err
 	}
@@ -84,9 +84,9 @@ func (privKey *PrivKey) UnmarshalJSON(data []byte) error {
 }
 
 func (privKey *PrivKey) ToECDSA() *ecdsa.PrivateKey {
-	X, Y := c.ScalarBaseMult(privKey.data[:])
+	X, Y := c.ScalarBaseMult(privKey.b[:])
 	return &ecdsa.PrivateKey{
-		D: new(big.Int).SetBytes(privKey.data[:]),
+		D: new(big.Int).SetBytes(privKey.b[:]),
 		PublicKey: ecdsa.PublicKey{
 			Curve: c,
 			X:     X,
@@ -113,21 +113,21 @@ func (privKey PrivKey) FromECDSA(*ecdsa.PrivateKey) {
 // PubKey related functions
 
 func (privKey *PrivKey) PubKey() *PubKey {
-	pubKey := PubKey{data: [PubKeySize]byte{}}
+	pubKey := PubKey{b: [PubKeySize]byte{}}
 
 	priv := privKey.ToECDSA()
 	X := priv.X.Bytes()
 	Y := priv.Y.Bytes()
 
-	copy(pubKey.data[33-len(X):], X)
-	copy(pubKey.data[65-len(Y):], Y)
+	copy(pubKey.b[33-len(X):], X)
+	copy(pubKey.b[65-len(Y):], Y)
 
 	return &pubKey
 }
 
 func GenPubKeyFromBytes(pubKeyBytes []byte) (*PubKey, error) {
 	pubKey := PubKey{}
-	copy(pubKey.data[:], pubKeyBytes)
+	copy(pubKey.b[:], pubKeyBytes)
 	err := pubKey.Check()
 	if err != nil {
 		return nil, err
@@ -136,24 +136,24 @@ func GenPubKeyFromBytes(pubKeyBytes []byte) (*PubKey, error) {
 }
 
 func (pubKey *PubKey) Check() error {
-	if len(pubKey.data) != PubKeySize {
+	if len(pubKey.b) != PubKeySize {
 		return fmt.Errorf("improper pubkey spec: size")
 	}
-	if pubKey.data[0] != PubKeyPrefix {
+	if pubKey.b[0] != PubKeyPrefix {
 		return fmt.Errorf("improper pubkey spec: prefix")
 	}
 	return nil
 }
 
 func (pubKey *PubKey) Bytes() []byte {
-	return pubKey.data[:]
+	return pubKey.b[:]
 }
 
 func (pubKey *PubKey) ToECDSA() *ecdsa.PublicKey {
 	return &ecdsa.PublicKey{
 		Curve: c,
-		X:     new(big.Int).SetBytes(pubKey.data[1:33]),
-		Y:     new(big.Int).SetBytes(pubKey.data[33:]),
+		X:     new(big.Int).SetBytes(pubKey.b[1:33]),
+		Y:     new(big.Int).SetBytes(pubKey.b[33:]),
 	}
 }
 
@@ -162,7 +162,7 @@ func (pubKey *PubKey) Equals(target PubKey) bool {
 }
 
 func (pubKey *PubKey) String() string {
-	return hex.EncodeToString(pubKey.data[:])
+	return hex.EncodeToString(pubKey.b[:])
 }
 
 func (pubKey *PubKey) MarshalJSON() ([]byte, error) {
@@ -179,7 +179,7 @@ func (pubKey *PubKey) UnmarshalJSON(data []byte) error {
 			len(data), PubKeySize*2+2,
 		)
 	}
-	_, err := hex.Decode(pubKey.data[:], data[1:len(data)-1])
+	_, err := hex.Decode(pubKey.b[:], data[1:len(data)-1])
 	if err != nil {
 		return err
 	}

@@ -34,9 +34,9 @@ type (
 )
 
 type PrivKey struct {
-	data [PrivKeySize]byte
+	b [PrivKeySize]byte
 }
 
 type PubKey struct {
-	data [PubKeySize]byte
+	b [PubKeySize]byte
 }
