@@ -52,7 +52,7 @@ func (privKey *PrivKey) Bytes() []byte {
 	return privKey.b[:]
 }
 
-func (privKey *PrivKey) Equals(target PrivKey) bool {
+func (privKey *PrivKey) Equals(target *PrivKey) bool {
 	return bytes.Equal(privKey.Bytes(), target.Bytes())
 }
 
@@ -157,7 +157,7 @@ func (pubKey *PubKey) ToECDSA() *ecdsa.PublicKey {
 	}
 }
 
-func (pubKey *PubKey) Equals(target PubKey) bool {
+func (pubKey *PubKey) Equals(target *PubKey) bool {
 	return bytes.Equal(pubKey.Bytes(), target.Bytes())
 }
 
