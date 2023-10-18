@@ -27,11 +27,9 @@ const (
 	SigSize       = 64
 )
 
-type (
-	// PrivKey [PrivKeySize]byte
-	// PubKey  [PubKeySize]byte
-	Addr string
-)
+type Addr struct {
+	b [AddrSize]byte
+}
 
 type PrivKey struct {
 	b [PrivKeySize]byte

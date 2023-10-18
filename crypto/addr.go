@@ -1,6 +1,7 @@
 package crypto
 
 import (
+	"bytes"
 	"crypto/elliptic"
 	h "crypto/sha256"
 
@@ -9,22 +10,34 @@ import (
 
 var preAddr = []byte{'t', 'c', 'k'}
 
-func (pubKey *PubKey) Address() Addr {
-	tmp := make([]byte, AddrSize)
-	pubKeyByte := elliptic.Marshal(c, pubKey.X(), pubKey.Y())
-	hash := h.Sum256(pubKeyByte)
-	b58 := base58.Encode(hash[:])
-	// addr := preAddr + base58.Encode(hash(pubKey))
-	copy(tmp[0:], preAddr)
-	copy(tmp[len(preAddr):], b58)
-	return Addr(tmp)
+// alias for backward compatibility
+func (pubKey *PubKey) Address() *Addr {
+	return pubKey.Addr()
 }
 
-func (addrA Addr) IsDrivenFrom(pubKey *PubKey) bool {
-	addrB := pubKey.Address()
+func (pubKey *PubKey) Addr() *Addr {
+	tmp := [AddrSize]byte{}
+	pubKeyBytes := elliptic.Marshal(c, pubKey.X(), pubKey.Y())
+	hash := h.Sum256(pubKeyBytes)
+	b58 := base58.Encode(hash[:])
+	copy(tmp[0:], preAddr)
+	copy(tmp[len(preAddr):], b58)
+	return &Addr{b: tmp}
+}
+
+func (addr *Addr) Bytes() []byte {
+	return addr.b[:]
+}
+
+func (addr *Addr) String() string {
+	return string(addr.Bytes())
+}
+
+func (addrA *Addr) IsDrivenFrom(pubKey *PubKey) bool {
+	addrB := pubKey.Addr()
 	return addrA.Equals(addrB)
 }
 
-func (addrA Addr) Equals(addrB Addr) bool {
-	return addrA == addrB
+func (addrA *Addr) Equals(addrB *Addr) bool {
+	return bytes.Equal(addrA.b[:], addrA.b[:])
 }
