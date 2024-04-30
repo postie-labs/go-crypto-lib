@@ -20,6 +20,16 @@ func TestECDHTwoParties(t *testing.T) {
 	assert.Nil(t, err)
 
 	assert.Equal(t, sharedKey1, sharedKey2)
+
+	sharedKey3, err := priv1.DeriveSharedKey(priv2.PubKey())
+	assert.Nil(t, err)
+
+	sharedKey4, err := priv2.DeriveSharedKey(priv1.PubKey())
+	assert.Nil(t, err)
+
+	assert.Equal(t, sharedKey3, sharedKey4)
+
+	assert.Equal(t, sharedKey1, sharedKey3)
 }
 
 func TestECDHThreeParties(t *testing.T) {
