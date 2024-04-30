@@ -6,6 +6,16 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+func TestECDHOneParty(t *testing.T) {
+	priv, err := GenPrivKey()
+	assert.Nil(t, err)
+
+	sharedKey, err := priv.DeriveSharedKey()
+	assert.Nil(t, err)
+
+	assert.NotNil(t, sharedKey)
+}
+
 func TestECDHTwoParties(t *testing.T) {
 	priv1, err := GenPrivKey()
 	assert.Nil(t, err)
