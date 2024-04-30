@@ -22,5 +22,5 @@ func TestAddr(t *testing.T) {
 	clonedAddr := clonedPubKey.Addr()
 
 	ok = clonedAddr.Equals(addr)
-	assert.False(t, ok)
+	assert.True(t, ok)
 }
