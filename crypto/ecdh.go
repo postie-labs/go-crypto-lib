@@ -23,6 +23,5 @@ func toPoint(x, y *big.Int) *elliptic.CurveParams {
 		Gx:      x,
 		Gy:      y,
 		BitSize: c.Params().BitSize,
-		Name:    "custom",
 	}
 }
